@@ -1,7 +1,8 @@
 -module(e3_file).
  
 -compile([export_all]).
- 
+
+-include("e3.hrl"). 
 -include_lib("webmachine/include/webmachine.hrl").
  
 init(Config) ->
@@ -36,10 +37,12 @@ to_html(RD, Ctx) ->
 to_json(RD, Ctx) ->
     {true, RD, Ctx}.
 
-from_text(RD, Ctx) ->
-    Body = wrq:req_body(RD),
-    io:format("body: ~p~n", [Body]),
-    Resp_body = "cool",
-    Resp = wrq:set_resp_body(Resp_body, RD),
-    {true, Resp, Ctx}.
+create_file_name(Id) ->
+    ?FILE_DIR ++ "/" ++ Id ++ ".dat".
 
+from_text(RD, Ctx) ->
+    Id = wrq:path_info(id, RD),
+    Resp = "<html><body>" ++ Id ++ "</body></html>",
+    Body = wrq:req_body(RD),
+    ok = file:write_file(create_file_name(Id), Body),
+    {Resp, RD, Ctx}.
