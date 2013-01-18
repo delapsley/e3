@@ -1,37 +1,61 @@
 e3 Webmachine Application
 =========================
 
-You should find in this directory:
+## Introduction
 
-   README : this file
-   Makefile : simple make commands
-   rebar : the Rebar build tool for Erlang applications
-   rebar.config : configuration for Rebar
-   start.sh : simple startup script for running e3
+This is a basic webmachine application that implements a simple RESTful API.
+The API enables a user to PUT and GET files from a file cache.
 
-/ebin
-  /e3.app : the Erlang app specification
-/src
-  /e3_app.erl : base module for the Erlang application
-  /e3_sup.erl : OTP supervisor for the application
-  /e3_resource.erl : a simple example Webmachine resource
-/priv
-  /dispatch.conf : the Webmachine URL-dispatching table
-  /www : a convenient place to put your static web content
+## Compilation
 
-You probably want to do one of a couple of things at this point:
+Run the following command from the root directory:
 
-0. Build the skeleton application:
-   $ make
-   - or -
-   $ ./rebar compile
+    make
 
-1. Start up the skeleton application:
-   $ ./start.sh
+## Unit tests
 
-2. Change the basic application:
-   edit src/e3_resource.erl
+To execute unit tests, in one terminal window start the server:
 
-3. Add some new resources:
-   edit src/YOUR_NEW_RESOURCE.erl
-   edit priv/dispatch.conf
+    ./start.sh
+
+In another terminal window, type the following command:
+
+    make api-tests
+
+You should see something like this:
+
+    $ make api-tests
+    test_get_on_file_returns_plain_text (api_tests.TestPaperAPI) ... ok
+    test_get_on_nonexisting_file_returns_404 (api_tests.TestPaperAPI) ... ok
+    test_get_on_root_returns_html_hello_world (api_tests.TestPaperAPI) ... ok
+    test_upload_file (api_tests.TestPaperAPI) ... ok
+
+    ----------------------------------------------------------------------
+    Ran 4 tests in 0.271s
+
+    OK
+    make: `api-tests' is up to date.
+
+## Usage
+
+### File upload
+
+To upload a file to the cache, you can use a tool like *curl*:
+
+    curl -X PUT\
+        -H "Content-Type: text/plain"\
+        -T 'test.txt'\
+        http://localhost:8000/file/test.txt
+
+
+### File download
+
+To retrieve a file that is in the cache, you can use a similar approach:
+
+    curl -X GET\
+        -H "Content-Type: text/plain"\
+        http://localhost:8000/file/test.txt
+
+## Questions
+
+Please email any questions to <delapsley@gmail.com>.
