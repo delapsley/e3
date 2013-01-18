@@ -56,6 +56,13 @@ content_types_provided(RD, Ctx) ->
 from_text(RD, Ctx) ->
     Id = wrq:path_info(id, RD),
     Resp = "<html><body>" ++ Id ++ "</body></html>",
+    Expires = case wrq:get_qs_value("expires", RD) of
+        'undefined' -> ?DEFAULT_EXPIRY;
+        Value ->
+            {IntegerValue, _} = string:to_integer(Value),
+            IntegerValue
+    end,
+    io:format("expires: ~p~n", [Expires]),
     Body = wrq:req_body(RD),
     ok = file:write_file(create_file_name(Id), Body),
     {Resp, RD, Ctx}.

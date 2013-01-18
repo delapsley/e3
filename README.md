@@ -6,6 +6,14 @@ e3 Webmachine Application
 This is a basic webmachine application that implements a simple RESTful API.
 The API enables a user to PUT and GET files from a file cache.
 
+Here is the API implemented
+
+| HTTP method | Route                        | Content Type | Request Body          | Status Code                        | Response                     |
+|-------------+------------------------------+--------------+-----------------------+------------------------------------+------------------------------+
+| GET         | /file/id                     | text/plain   |                       | 200 (if found), 404 (otherwise)    | <text from file>             |
+| PUT         | /file/id[?expiry=<duration>] | text/plain   | <text to be uploaded> | 201 (if created), 200 (if updated) | <html><body>id</body></html> |
+|-------------+------------------------------+--------------+-----------------------+------------------------------------+------------------------------+
+
 ## Compilation
 
 Run the following command from the root directory:
