@@ -1,10 +1,10 @@
-%% @author author <author@example.com>
-%% @copyright YYYY author.
+%% @author Dave Lapsley <delapsley@gmail.com>
+%% @copyright 2013 author.
 
 %% @doc Callbacks for the e3 application.
 
 -module(e3_app).
--author('author <author@example.com>').
+-author('Dave Lapsley <delapsley@gmail.com>').
 
 -behaviour(application).
 -export([start/2,stop/1]).

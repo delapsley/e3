@@ -4,7 +4,7 @@
 %% @doc e3 startup code
 
 -module(e3).
--author('author <author@example.com>').
+-author('Dave Lapsley <delapsley@gmail.com>').
 -export([start/0, start_link/0, stop/0]).
 
 ensure_started(App) ->

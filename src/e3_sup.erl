@@ -1,10 +1,10 @@
-%% @author author <author@example.com>
-%% @copyright YYYY author.
+%% @author Dave Lapsley <delapsley@gmail.com>
+%% @copyright 2013 author.
 
 %% @doc Supervisor for the e3 application.
 
 -module(e3_sup).
--author('author <author@example.com>').
+-author('Dave Lapsley <delapsley@gmail.com>').
 
 -behaviour(supervisor).
 

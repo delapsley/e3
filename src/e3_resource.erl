@@ -1,5 +1,5 @@
-%% @author author <author@example.com>
-%% @copyright YYYY author.
+%% @author Dave Lapsley <delapsley@gmail.com>
+%% @copyright 2013 author.
 %% @doc Example webmachine_resource.
 
 -module(e3_resource).
