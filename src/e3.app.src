@@ -1,0 +1,18 @@
+%%-*- mode: erlang -*-
+{application, e3,
+ [
+  {description, "e3"},
+  {vsn, "1"},
+  {modules, []},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  inets,
+                  crypto,
+                  mochiweb,
+                  webmachine
+                 ]},
+  {mod, { e3_app, []}},
+  {env, []}
+ ]}.
