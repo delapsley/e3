@@ -18,14 +18,13 @@ allowed_methods(RD, Ctx) ->
     {['GET', 'HEAD', 'PUT'], RD, Ctx}.
 
 resource_exists(RD, Ctx) ->
-    {Id, _} = string:to_integer(wrq:path_info(id, RD)),
-    io:format("id: ~p~n", [Id]),
-    if
-        Id =< 3 ->
-            io:format("true~n", []),
+    Id = wrq:path_info(id, RD),
+    FileName = create_file_name(Id),
+    io:format("FileName: ~p~n", [FileName]),
+    case file:read_file_info(FileName) of
+        {ok, _} ->
             {true, RD, Ctx};
-        true ->
-            io:format("false~n", []),
+        {error, _} ->
             {false, RD, Ctx}
     end.
 
