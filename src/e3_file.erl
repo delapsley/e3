@@ -5,9 +5,6 @@
 -include_lib("webmachine/include/webmachine.hrl").
  
 init(Config) ->
-    %% fill the database with some test data
-    %% prp_schema:init_tables(),
-    %% prp_schema:fill_with_dummies(),
     {{trace, "traces"}, Config}.
 
 content_types_provided(RD, Ctx) ->
@@ -37,24 +34,8 @@ to_html(RD, Ctx) ->
     {Resp, RD, Ctx}.
 
 to_json(RD, Ctx) ->
-    %Id = wrq:path_info(id, RD),
-    % {paper, Id2, Title} = prp_schema:read_paper(Id),
-    %Resp = mochijson:encode({struct, [
-    %            {id, integer_to_list(Id2)},
-    %            {title, Title}
-    %]}),
     {true, RD, Ctx}.
 
-from_json(RD, Ctx) ->
-    Id = wrq:path_info(id, RD),
-    <<"title=", Title/binary>> = wrq:req_body(RD),
-    Title1 = binary_to_list(Title),
-    % prp_schema:create_paper(list_to_integer(Id), Title1),
-    %JSON = list_to_binary(paper2json(Id, Title)),
-    JSON = "{\"id\":\"0\",\"title\":\"ABC\"}",
-    Resp = wrq:set_resp_body(JSON, RD),
-    {true, Resp, Ctx}.
- 
 from_text(RD, Ctx) ->
     Body = wrq:req_body(RD),
     io:format("body: ~p~n", [Body]),
