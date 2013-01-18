@@ -1,14 +1,7 @@
 %%----------------------------------------------------------------------------
 %% @author Dave Lapsley <delapsley@gmail.com>
 %% @copyright 2013 Dave Lapsley.
-%% @doc Function handlers for file resource.
-%%
-%% This file is divided into the following sections:
-%%  - Initialization
-%%  - Supported Operations
-%%  - Utility Functions
-%%  - Incoming Operations
-%%  - Outgoing Operations
+%% @doc Caching layer.
 %%
 %%----------------------------------------------------------------------------
 -module(e3_file).
@@ -40,12 +33,8 @@ create_file_name(Id) ->
 resource_exists(RD, Ctx) ->
     Id = wrq:path_info(id, RD),
     FileName = create_file_name(Id),
-    case file:read_file_info(FileName) of
-        {ok, _} ->
-            {true, RD, Ctx};
-        {error, _} ->
-            {false, RD, Ctx}
-    end.
+    KeyExists = e3_cache:key_exists(FileName),
+    {KeyExists, RD, Ctx}.
 
 %%----------------------------------------------------------------------------
 % Incoming data operations.
@@ -62,9 +51,13 @@ from_text(RD, Ctx) ->
             {IntegerValue, _} = string:to_integer(Value),
             IntegerValue
     end,
+
     io:format("expires: ~p~n", [Expires]),
     Body = wrq:req_body(RD),
-    ok = file:write_file(create_file_name(Id), Body),
+    FileName = create_file_name(Id),
+    ok = file:write_file(FileName, Body),
+    e3_cache:set(FileName, {Body}),
+    io:format("mc: set ~p~n", [Body]),
     {Resp, RD, Ctx}.
 
 %%----------------------------------------------------------------------------
@@ -76,7 +69,7 @@ content_types_accepted(RD, Ctx) ->
 to_text(RD, Ctx) ->
     Id = wrq:path_info(id, RD),
     FileName = create_file_name(Id),
-    {ok, Data} = file:read_file(FileName),
+    {ok, {Data}} = lists:nth(1, e3_cache:get(FileName)),
+    io:format("mc: get ~p~n", [Data]),
     {Data, RD, Ctx}.
-
 
