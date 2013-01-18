@@ -8,47 +8,33 @@ class TestPaperAPI(unittest.TestCase):
 
     def setUp(self):
         self.base_url = "http://localhost:8000"
-        self.file_url = "http://localhost:8000/file/"
-        self.json_headers ={"Content-Type": "application/json", "Accept": "application/json"}
-        self.new_file = {"title": "ABC"}
-        self.new_file2 =  {"title": "DEF"}
+        self.file_url = "%s/file/" % self.base_url
         self.put_headers = {"Content-Type": "text/plain"}
+
+        # Upload test data.
+        url = self.file_url + '0'
+        self.data = 'this\nis\nvery\cool\n'
+        resp = requests.put(url, data=self.data, headers=self.put_headers)
 
     def test_get_on_root_returns_html_hello_world(self):
         resp = requests.get(self.base_url)
         self.assertEqual(resp.content, "<html><body>Hello, new world</body></html>")
 
-    def test_get_on_file_returns_id_in_html(self):
-        for id in 1,2,3:
-            resp = requests.get(self.file_url + str(id))
-            self.assertEqual(resp.status_code, 200)
-            self.assertEqual(resp.content, "<html><body>" + str(id) + "</body></html>")
+    def test_get_on_file_returns_plain_text(self):
+        id_ = 0
+        resp = requests.get(self.file_url + str(id_))
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content, self.data)
 
     def test_get_on_nonexisting_file_returns_404(self):
         resp = requests.get(self.file_url + '1235')
         self.assertEqual(resp.status_code, 404)
 
-    def notest_put_new_file(self):
-        url = self.file_url + '0'
-        resp = requests.put(url, data=self.new_file, headers=self.json_headers)
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.content, '{"id":"0","title":"ABC"}')
-
-        # Test durability
-        resp2 = requests.get(url)
-
-    def notest_get_on_file_returns_id_in_json(self):
-        for id in 1,2,3:
-            resp = requests.get(self.file_url + str(id), headers=self.json_headers)
-            self.assertEqual(resp.status_code, 200)
-            self.assertEqual(resp.content, '{"id":' + '"' + str(id) + '",'\
-                    '"title":'+ '"' + str(id) + '"}')
-
     def test_upload_file(self):
-        url = self.file_url + '0'
+        url = self.file_url + '1'
         data = 'this\nis\nvery\cool\n'
         resp = requests.put(url, data=data, headers=self.put_headers)
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 204)
 
         # Test durability
         resp2 = requests.get(url)
